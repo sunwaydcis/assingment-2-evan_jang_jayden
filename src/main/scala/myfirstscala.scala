@@ -2,8 +2,6 @@
  *
  * This program analyzes hotel booking dataset provided by a company that assists
  * international travelers in securing accommodations across various destination countries
- *
- * @author Evan Lo Jen Zhen, Lee Jang Jou, Jayden David
  */
 
 import com.github.tototoshi.csv.*
