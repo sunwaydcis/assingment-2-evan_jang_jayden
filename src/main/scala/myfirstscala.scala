@@ -179,3 +179,7 @@ def main(): Unit = {
   println()
 
 }
+
+/** Footer Documentation
+ * End of Hotel Booking Analysis Program
+ */
