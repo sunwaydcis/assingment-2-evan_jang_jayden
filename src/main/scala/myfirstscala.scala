@@ -87,6 +87,27 @@ def main(): Unit = {
 
   def question2(): Unit = {
 
+    // 1. Most economical based on booking price (lowest)
+    val cheapestBooking = data.minBy(_.bookingPriceSGD)
+    println("Cheapest Booking Price Hotel:")
+    println(s" → ${cheapestBooking.hotelName}")
+    println(s"Booking Price: $$${cheapestBooking.bookingPriceSGD}")
+    println()
+
+    // 2. Most economical based on discount (highest)
+    val highestDiscount = data.maxBy(_.discount)
+    println("Highest Discount Hotel:")
+    println(s" → ${highestDiscount.hotelName}")
+    println(s"Discount: ${highestDiscount.discount}%")
+    println()
+
+    // 3. Most economical based on profit margin (lowest)
+    val lowestProfitMargin = data.minBy(_.profitMargin)
+    println("Lowest Profit Margin Hotel:")
+    println(s" → ${lowestProfitMargin.hotelName}")
+    println(s"Profit Margin: ${lowestProfitMargin.profitMargin}")
+    println()
+
   }
 
   def question3(): Unit = {
