@@ -42,6 +42,7 @@ class HotelDataReader {
     data
   }
 
+  // function to parse single row
   private def parseRow(row: Map[String, String]): HotelData = {
     HotelData(
       row("Booking ID"),
