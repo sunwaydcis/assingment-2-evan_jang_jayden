@@ -127,7 +127,7 @@ def main(): Unit = {
 
   def question3(): Unit = {
     // which hotel is the most profitable when considering the number of
-    // visitor nad profit margin?
+    // visitor and profit margin?
 
     val profitability = data.groupBy(_.hotelName).map { case (hotel, bookings) =>
 
@@ -144,28 +144,28 @@ def main(): Unit = {
     println(s" → $bestHotel")
     println(f"Total Profit: $$$bestProfit%.2f")
     println(s"Total Visitors: $visitors")
-
-    // output
-
-    println()
-    println("——————————————————————————————————————————————————")
-    println("Question 1")
-    println("——————————————————————————————————————————————————")
-    println()
-    question1()
-    println()
-    println("——————————————————————————————————————————————————")
-    println("Question 2")
-    println("——————————————————————————————————————————————————")
-    println()
-    question2()
-    println()
-    println("——————————————————————————————————————————————————")
-    println("Question 3")
-    println("——————————————————————————————————————————————————")
-    println()
-    question3()
-    println()
   }
+
+  // output
+
+  println()
+  println("——————————————————————————————————————————————————")
+  println("Question 1")
+  println("——————————————————————————————————————————————————")
+  println()
+  question1()
+  println()
+  println("——————————————————————————————————————————————————")
+  println("Question 2")
+  println("——————————————————————————————————————————————————")
+  println()
+  question2()
+  println()
+  println("——————————————————————————————————————————————————")
+  println("Question 3")
+  println("——————————————————————————————————————————————————")
+  println()
+  question3()
+  println()
 
 }
