@@ -67,3 +67,8 @@ class HotelDataReader {
   }
 
 }
+
+@main
+def main(): Unit = {
+
+}
