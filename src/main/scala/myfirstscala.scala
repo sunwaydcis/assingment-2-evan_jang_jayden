@@ -71,7 +71,11 @@ class HotelDataReader {
 @main
 def main(): Unit = {
 
+  // read data
+
   val data = HotelDataReader().readData("Hotel_Dataset.csv")
+
+  // questions
 
   def question1(): Unit = {
 
@@ -127,7 +131,6 @@ def main(): Unit = {
     println(s" → $bestHotel")
     println(f"Total Profit: $$$bestProfit%.2f")
     println(s"Total Visitors: $visitors")
-
 
     // output
 
