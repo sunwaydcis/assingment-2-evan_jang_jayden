@@ -29,6 +29,14 @@ class HotelDataReader {
     profitMargin: BigDecimal
   )
 
+  def readData(file: String): List[HotelData] = {
+    val path: String = getClass.getResource(file).toURI.getPath
+    val reader = CSVReader.open(path)
+    val data = reader.allWithHeaders().map(parseRow)
+    reader.close()
+    data
+  }
+
   private def parseRow(row: Map[String, String]): HotelData = {
     HotelData(
       row("Booking ID"),
