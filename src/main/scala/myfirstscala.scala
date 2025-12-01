@@ -170,6 +170,6 @@ def main(): Unit = {
 
 }
 
-/** Footer Documentation
+/**
  * End of Hotel Booking Analysis Program
  */
