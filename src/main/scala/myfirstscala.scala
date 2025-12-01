@@ -128,28 +128,22 @@ def main(): Unit = {
     println(f"Total Profit: $$$bestProfit%.2f")
     println(s"Total Visitors: $visitors")
 
+
+    // output
+
+    println()
+    println("Question 1")
+    println()
+    question1()
+    println()
+    println("Question 2")
+    println()
+    question2()
+    println()
+    println("Question 3")
+    println()
+    question3()
+    println()
   }
-
-  // output
-
-  println()
-  println("——————————————————————————————————————————————————")
-  println("Question 1")
-  println("——————————————————————————————————————————————————")
-  println()
-  question1()
-  println()
-  println("——————————————————————————————————————————————————")
-  println("Question 2")
-  println("——————————————————————————————————————————————————")
-  println()
-  question2()
-  println()
-  println("——————————————————————————————————————————————————")
-  println("Question 3")
-  println("——————————————————————————————————————————————————")
-  println()
-  question3()
-  println()
 
 }
