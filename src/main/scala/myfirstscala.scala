@@ -4,6 +4,8 @@ import com.github.tototoshi.csv.*
 
 class HotelDataReader {
 
+  // class for data encapsulation
+
   case class HotelData(
     bookingId: String,
     dateOfBooking: String,
