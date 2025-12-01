@@ -33,6 +33,7 @@ class HotelDataReader {
     profitMargin: BigDecimal
   )
 
+  // function for reading csv
   def readData(file: String): List[HotelData] = {
     val path: String = getClass.getResource(file).toURI.getPath
     val reader = CSVReader.open(path)
