@@ -94,11 +94,19 @@ def main(): Unit = {
   def question1(): Unit = {
     // which country has the highest number of bookings in the dataset?
 
+    // Step 1: Group all bookings by the origin country
+    // This creates a Map[String, List[HotelData]] where the key is the country
     val grouped = data.groupBy(_.originCountry)
+
+    // Step 2: Count the number of bookings per country
+    // `mapValues(_.size)` transforms each list of bookings into its length
     val counts = grouped.mapValues(_.size)
 
+    // Step 3: Find the country with the maximum number of bookings
+    // `maxBy(_._2)` compares the counts (second element of the tuple) and returns the highest
     val (topCountry, topCount) = counts.maxBy(_._2)
 
+    // Step 4: Print the result
     println(s"Country with the highest number of bookings:")
     println(s" → $topCountry with $topCount bookings")
 
