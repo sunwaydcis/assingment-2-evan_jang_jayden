@@ -112,6 +112,22 @@ def main(): Unit = {
 
   def question3(): Unit = {
 
+    val profitability = data.groupBy(_.hotelName).map { case (hotel, bookings) =>
+
+      val totalVisitors = bookings.map(_.numberOfPeople).sum
+      val totalProfit =
+        bookings.map(b => b.profitMargin * b.numberOfPeople).sum
+
+      (hotel, totalProfit, totalVisitors)
+    }
+
+    val (bestHotel, bestProfit, visitors) = profitability.maxBy(_._2)
+
+    println(s"Most profitable hotel:")
+    println(s" → $bestHotel")
+    println(f"Total Profit: $$$bestProfit%.2f")
+    println(s"Total Visitors: $visitors")
+
   }
 
 }
