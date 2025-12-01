@@ -1,5 +1,7 @@
 import com.github.tototoshi.csv.*
 
+// class for reading nad parsing data
+
 class HotelDataReader {
 
   case class HotelData(
