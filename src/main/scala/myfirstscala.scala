@@ -75,6 +75,14 @@ def main(): Unit = {
 
   def question1(): Unit = {
 
+    val grouped = data.groupBy(_.originCountry)
+    val counts = grouped.mapValues(_.size)
+
+    val (topCountry, topCount) = counts.maxBy(_._2)
+
+    println(s"Country with the highest number of bookings:")
+    println(s" → $topCountry with $topCount bookings")
+
   }
 
   def question2(): Unit = {
