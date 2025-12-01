@@ -40,7 +40,7 @@ class HotelDataReader {
     bookingPriceSGD: BigDecimal,
     discount: BigDecimal,
     gst: BigDecimal,
-    profitMargin: BigDecimal
+    profitMargin: BigDecimal,
   )
 
   // function for reading csv
