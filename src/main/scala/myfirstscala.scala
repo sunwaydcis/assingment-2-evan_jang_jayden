@@ -99,6 +99,8 @@ def main(): Unit = {
   }
 
   def question2(): Unit = {
+    // which hotel offers the most economical option for customers
+    // based on the following criteria?
 
     // 1. Most economical based on booking price (lowest)
     val cheapestBooking = data.minBy(_.bookingPriceSGD)
