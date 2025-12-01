@@ -154,25 +154,20 @@ def main(): Unit = {
 
   // output
 
-  println()
-  println("——————————————————————————————————————————————————")
-  println("Question 1")
-  println("——————————————————————————————————————————————————")
-  println()
+  println("\n==================== Hotel Booking Analysis ====================\n")
+
+  println(">>> Question 1: Country with the highest number of bookings <<<\n")
   question1()
-  println()
-  println("——————————————————————————————————————————————————")
-  println("Question 2")
-  println("——————————————————————————————————————————————————")
-  println()
+  println("\n---------------------------------------------------------------\n")
+
+  println(">>> Question 2: Most economical hotels <<<\n")
   question2()
-  println()
-  println("——————————————————————————————————————————————————")
-  println("Question 3")
-  println("——————————————————————————————————————————————————")
-  println()
+  println("\n---------------------------------------------------------------\n")
+
+  println(">>> Question 3: Most profitable hotel <<<\n")
   question3()
-  println()
+  println("\n==================== End of Analysis =========================\n")
+
 
 }
 
