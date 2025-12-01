@@ -126,6 +126,8 @@ def main(): Unit = {
   }
 
   def question3(): Unit = {
+    // which hotel is the most profitable when considering the number of
+    // visitor nad profit margin?
 
     val profitability = data.groupBy(_.hotelName).map { case (hotel, bookings) =>
 
