@@ -74,6 +74,8 @@ class HotelDataReader {
 
 }
 
+// main program
+
 @main
 def main(): Unit = {
 
