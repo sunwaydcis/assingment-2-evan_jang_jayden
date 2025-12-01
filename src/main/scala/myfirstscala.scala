@@ -4,8 +4,6 @@
  * international travelers in securing accommodations across various destination countries
  *
  * @author Evan Lo Jen Zhen, Lee Jang Jou, Jayden David
- * @version 1.0
- * @since 2025
  */
 
 import com.github.tototoshi.csv.*
