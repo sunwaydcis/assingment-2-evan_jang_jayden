@@ -6,7 +6,7 @@
 
 import com.github.tototoshi.csv.*
 
-// class for reading nad parsing data
+// class for reading and parsing data
 
 class HotelDataReader {
 
