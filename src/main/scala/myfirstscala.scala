@@ -73,4 +73,16 @@ def main(): Unit = {
 
   val data = HotelDataReader().readData("Hotel_Dataset.csv")
 
+  def question1(): Unit = {
+
+  }
+
+  def question2(): Unit = {
+
+  }
+
+  def question3(): Unit = {
+
+  }
+
 }
