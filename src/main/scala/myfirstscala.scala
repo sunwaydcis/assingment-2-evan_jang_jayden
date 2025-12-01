@@ -130,4 +130,26 @@ def main(): Unit = {
 
   }
 
+  // output
+
+  println()
+  println("——————————————————————————————————————————————————")
+  println("Question 1")
+  println("——————————————————————————————————————————————————")
+  println()
+  question1()
+  println()
+  println("——————————————————————————————————————————————————")
+  println("Question 2")
+  println("——————————————————————————————————————————————————")
+  println()
+  question2()
+  println()
+  println("——————————————————————————————————————————————————")
+  println("Question 3")
+  println("——————————————————————————————————————————————————")
+  println()
+  question3()
+  println()
+
 }
