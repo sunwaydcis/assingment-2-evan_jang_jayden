@@ -146,17 +146,27 @@ def main(): Unit = {
     // which hotel is the most profitable when considering the number of
     // visitor and profit margin?
 
+    // Step 1: Group all bookings by hotel name
+    // Creates a Map[String, List[HotelData]] where the key is the hotel name
     val profitability = data.groupBy(_.hotelName).map { case (hotel, bookings) =>
 
+      // Step 2: Calculate total number of visitors per hotel
+      // Sum the numberOfPeople field across all bookings
       val totalVisitors = bookings.map(_.numberOfPeople).sum
-      val totalProfit =
-        bookings.map(b => b.profitMargin * b.numberOfPeople).sum
 
+      // Step 3: Calculate total profit per hotel
+      // Multiply profitMargin by numberOfPeople for each booking, then sum
+      val totalProfit = bookings.map(b => b.profitMargin * b.numberOfPeople).sum
+
+      // Step 4: Return a tuple of (hotel name, total profit, total visitors)
       (hotel, totalProfit, totalVisitors)
     }
 
+    // Step 5: Find the hotel with the maximum total profit
+    // `maxBy(_._2)` compares the totalProfit (second element of tuple)
     val (bestHotel, bestProfit, visitors) = profitability.maxBy(_._2)
 
+    // Step 6: Print the results
     println(s"Most profitable hotel:")
     println(s" → $bestHotel")
     println(f"Total Profit: $$$bestProfit%.2f")
