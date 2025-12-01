@@ -87,6 +87,8 @@ def main(): Unit = {
 
   // read data
 
+  // enter file name to allow for usage of the same function for
+  // dataset with different names
   val data = HotelDataReader().readData("Hotel_Dataset.csv")
 
   // questions
