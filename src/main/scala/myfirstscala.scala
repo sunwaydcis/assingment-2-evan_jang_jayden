@@ -86,6 +86,7 @@ def main(): Unit = {
   // questions
 
   def question1(): Unit = {
+    // which country has the highest number of bookings in the dataset?
 
     val grouped = data.groupBy(_.originCountry)
     val counts = grouped.mapValues(_.size)
