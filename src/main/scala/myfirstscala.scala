@@ -116,21 +116,24 @@ def main(): Unit = {
     // which hotel offers the most economical option for customers
     // based on the following criteria?
 
-    // 1. Most economical based on booking price (lowest)
+    // 1. Find the hotel with the lowest booking price
+    // `minBy(_.bookingPriceSGD)` returns the HotelData object with the minimum price
     val cheapestBooking = data.minBy(_.bookingPriceSGD)
     println("Cheapest Booking Price Hotel:")
     println(s" → ${cheapestBooking.hotelName}")
     println(s"Booking Price: $$${cheapestBooking.bookingPriceSGD}")
     println()
 
-    // 2. Most economical based on discount (highest)
+    // 2. Find the hotel with the highest discount
+    // `maxBy(_.discount)` returns the HotelData object with the maximum discount
     val highestDiscount = data.maxBy(_.discount)
     println("Highest Discount Hotel:")
     println(s" → ${highestDiscount.hotelName}")
     println(s"Discount: ${highestDiscount.discount}%")
     println()
 
-    // 3. Most economical based on profit margin (lowest)
+    // 3. Find the hotel with the lowest profit margin
+    // `minBy(_.profitMargin)` returns the HotelData object with the minimum profit margin
     val lowestProfitMargin = data.minBy(_.profitMargin)
     println("Lowest Profit Margin Hotel:")
     println(s" → ${lowestProfitMargin.hotelName}")
