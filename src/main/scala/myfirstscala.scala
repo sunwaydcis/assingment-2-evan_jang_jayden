@@ -71,4 +71,6 @@ class HotelDataReader {
 @main
 def main(): Unit = {
 
+  val data = HotelDataReader().readData("Hotel_Dataset.csv")
+
 }
