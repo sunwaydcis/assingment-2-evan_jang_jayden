@@ -101,11 +101,12 @@ def main(): Unit = {
   }
 
   // For criteria where LOWER is better (price, profit margin)
+  // Uses TRUE min-max normalization + inversion
   def normalizeLowerBetter(values: Seq[Double]): Seq[Double] = {
     val min = values.min
     val max = values.max
     if (max - min == 0) values.map(_ => 1.0)
-    else values.map(v => (max - v) / (max - min))
+    else values.map(v => 1 - ((v - min) / (max - min)))
   }
 
   // Groups by hotel and computes mean of a function
