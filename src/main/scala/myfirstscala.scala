@@ -7,38 +7,34 @@
 import com.github.tototoshi.csv.*
 
 // class for reading and parsing data
+case class HotelData(
+                      bookingId: String,
+                      dateOfBooking: String,
+                      time: String,
+                      customerId: String,
+                      gender: String,
+                      age: Int,
+                      originCountry: String,
+                      state: String,
+                      location: String,
+                      destinationCountry: String,
+                      destinationCity: String,
+                      numberOfPeople: Int,
+                      checkInDate: String,
+                      numberOfDays: Int,
+                      checkOutDate: String,
+                      rooms: Int,
+                      hotelName: String,
+                      hotelRating: Double,
+                      paymentMode: String,
+                      bankName: String,
+                      bookingPriceSGD: BigDecimal,
+                      discount: BigDecimal,
+                      gst: BigDecimal,
+                      profitMargin: BigDecimal,
+                    )
 
 class HotelDataReader {
-
-  // class for data encapsulation
-
-  case class HotelData(
-    bookingId: String,
-    dateOfBooking: String,
-    time: String,
-    customerId: String,
-    gender: String,
-    age: Int,
-    originCountry: String,
-    state: String,
-    location: String,
-    destinationCountry: String,
-    destinationCity: String,
-    numberOfPeople: Int,
-    checkInDate: String,
-    numberOfDays: Int,
-    checkOutDate: String,
-    rooms: Int,
-    hotelName: String,
-    hotelRating: Double,
-    paymentMode: String,
-    bankName: String,
-    bookingPriceSGD: BigDecimal,
-    discount: BigDecimal,
-    gst: BigDecimal,
-    profitMargin: BigDecimal,
-  )
-
   // function for reading csv
   def readData(file: String): List[HotelData] = {
     val path: String = getClass.getResource(file).toURI.getPath
@@ -92,6 +88,45 @@ def main(): Unit = {
   val data = HotelDataReader().readData("Hotel_Dataset.csv")
 
   // questions
+  // ========================================
+  //       REUSABLE NORMALIZATION UTILS
+  // ========================================
+
+  // Normalizes a sequence of numbers using min-max scaling
+  def normalize(values: Seq[Double]): Seq[Double] = {
+    val min = values.min
+    val max = values.max
+    if (max - min == 0) values.map(_ => 1.0) // prevent divide by zero
+    else values.map(v => (v - min) / (max - min))
+  }
+
+  // For criteria where LOWER is better (price, profit margin)
+  def normalizeLowerBetter(values: Seq[Double]): Seq[Double] = {
+    val min = values.min
+    val max = values.max
+    if (max - min == 0) values.map(_ => 1.0)
+    else values.map(v => (max - v) / (max - min))
+  }
+
+  // Groups by hotel and computes mean of a function
+  def meanByHotel[T](data: List[HotelData], metric: HotelData => Double): Map[String, Double] =
+    data.groupBy(_.hotelName).map { case (hotel, bookings) =>
+      val avg = bookings.map(metric).sum / bookings.size
+      (hotel, avg)
+    }
+
+  // Given a Map(hotel -> rawValue), returns Map(hotel -> normalizedValue)
+  def normalizeMapLowerBetter(input: Map[String, Double]): Map[String, Double] = {
+    val values = input.values.toSeq
+    val norm = normalizeLowerBetter(values)
+    input.keys.zip(norm).toMap
+  }
+
+  def normalizeMapHigherBetter(input: Map[String, Double]): Map[String, Double] = {
+    val values = input.values.toSeq
+    val norm = normalize(values)
+    input.keys.zip(norm).toMap
+  }
 
   def question1(): Unit = {
     // which country has the highest number of bookings in the dataset?
@@ -115,64 +150,53 @@ def main(): Unit = {
   }
 
   def question2(): Unit = {
-    // which hotel offers the most economical option for customers
-    // based on the following criteria?
+    println("Most Economical Hotel (Price/Room + Discount + Profit Margin):\n")
 
-    // 1. Find the hotel with the lowest booking price
-    // `minBy(_.bookingPriceSGD)` returns the HotelData object with the minimum price
-    val cheapestBooking = data.minBy(_.bookingPriceSGD)
-    println("Cheapest Booking Price Hotel:")
-    println(s" → ${cheapestBooking.hotelName}")
-    println(s"Booking Price: $$${cheapestBooking.bookingPriceSGD}")
-    println()
+    // ---------- 1. Compute raw values ----------
+    val pricePerRoomPerDayMap = meanByHotel(data, b =>
+      (b.bookingPriceSGD.toDouble) / (b.rooms * b.numberOfDays)
+    )
 
-    // 2. Find the hotel with the highest discount
-    // `maxBy(_.discount)` returns the HotelData object with the maximum discount
-    val highestDiscount = data.maxBy(_.discount)
-    println("Highest Discount Hotel:")
-    println(s" → ${highestDiscount.hotelName}")
-    println(s"Discount: ${highestDiscount.discount}%")
-    println()
+    val discountMap = meanByHotel(data, _.discount.toDouble)
+    val profitMarginMap = meanByHotel(data, _.profitMargin.toDouble)
 
-    // 3. Find the hotel with the lowest profit margin
-    // `minBy(_.profitMargin)` returns the HotelData object with the minimum profit margin
-    val lowestProfitMargin = data.minBy(_.profitMargin)
-    println("Lowest Profit Margin Hotel:")
-    println(s" → ${lowestProfitMargin.hotelName}")
-    println(s"Profit Margin: ${lowestProfitMargin.profitMargin}")
-    println()
+    // ---------- 2. Normalize ----------
+    val normPrice = normalizeMapLowerBetter(pricePerRoomPerDayMap)
+    val normDiscount = normalizeMapHigherBetter(discountMap)
+    val normProfit = normalizeMapLowerBetter(profitMarginMap)
 
+    // ---------- 3. Combine ----------
+    val combinedScores = pricePerRoomPerDayMap.keys.map { hotel =>
+      val finalScore = (normPrice(hotel) + normDiscount(hotel) + normProfit(hotel)) / 3
+      (hotel, finalScore)
+    }.toMap
+
+    // ---------- 4. Select best ----------
+    val (bestHotel, bestScore) = combinedScores.maxBy(_._2)
+
+    println(s"Best all-around economical hotel:")
+    println(s" → $bestHotel")
+    println(f"Final Score: $bestScore%.4f")
   }
 
   def question3(): Unit = {
-    // which hotel is the most profitable when considering the number of
-    // visitor and profit margin?
+    println("Most Profitable Hotel (Visitors × Profit Margin):\n")
 
-    // Step 1: Group all bookings by hotel name
-    // Creates a Map[String, List[HotelData]] where the key is the hotel name
-    val profitability = data.groupBy(_.hotelName).map { case (hotel, bookings) =>
-
-      // Step 2: Calculate total number of visitors per hotel
-      // Sum the numberOfPeople field across all bookings
-      val totalVisitors = bookings.map(_.numberOfPeople).sum
-
-      // Step 3: Calculate total profit per hotel
-      // Multiply profitMargin by numberOfPeople for each booking, then sum
-      val totalProfit = bookings.map(b => b.profitMargin * b.numberOfPeople).sum
-
-      // Step 4: Return a tuple of (hotel name, total profit, total visitors)
-      (hotel, totalProfit, totalVisitors)
+    // 1. Compute raw total profit per hotel
+    val totalProfitMap = data.groupBy(_.hotelName).map { case (hotel, bookings) =>
+      val totalProfit = bookings.map(b => b.profitMargin.toDouble * b.numberOfPeople).sum
+      (hotel, totalProfit)
     }
 
-    // Step 5: Find the hotel with the maximum total profit
-    // `maxBy(_._2)` compares the totalProfit (second element of tuple)
-    val (bestHotel, bestProfit, visitors) = profitability.maxBy(_._2)
+    // 2. Normalize (higher better)
+    val normalizedProfitMap = normalizeMapHigherBetter(totalProfitMap)
 
-    // Step 6: Print the results
-    println(s"Most profitable hotel:")
+    // 3. Select best
+    val (bestHotel, bestScore) = normalizedProfitMap.maxBy(_._2)
+
+    println("Most profitable hotel:")
     println(s" → $bestHotel")
-    println(f"Total Profit: $$$bestProfit%.2f")
-    println(s"Total Visitors: $visitors")
+    println(f"Profit Score: $bestScore%.4f")
   }
 
   // output
