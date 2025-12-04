@@ -68,7 +68,7 @@ class HotelDataReader {
       row("Payment Mode"),
       row("Bank Name"),
       row("Booking Price[SGD]").toDouble,
-      row("Discount").dropRight(1).toDouble, // Remove "%"
+      row("Discount").dropRight(1).toDouble, // Parse single CSV row into HotelData; remove '%' from discount before converting to Double
       row("GST").toDouble,
       row("Profit Margin").toDouble,
     )
