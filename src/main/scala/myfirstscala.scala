@@ -157,7 +157,6 @@ def main(): Unit = {
     val pricePerRoomPerDayMap = meanByHotel(data, b =>
       (b.bookingPriceSGD.toDouble) / (b.rooms * b.numberOfDays)
     )
-
     val discountMap = meanByHotel(data, _.discount.toDouble)
     val profitMarginMap = meanByHotel(data, _.profitMargin.toDouble)
 
@@ -175,9 +174,19 @@ def main(): Unit = {
     // ---------- 4. Select best ----------
     val (bestHotel, bestScore) = combinedScores.maxBy(_._2)
 
+    // Gather extra info
+    val hotelData = data.filter(_.hotelName == bestHotel)
+    val country = hotelData.head.destinationCountry
+    val avgPrice = pricePerRoomPerDayMap(bestHotel)
+    val avgDiscount = discountMap(bestHotel)
+    val avgProfit = profitMarginMap(bestHotel)
+
     println(s"Best all-around economical hotel:")
-    println(s" → $bestHotel")
+    println(s" → $bestHotel in $country")
     println(f"Final Score: $bestScore%.4f")
+    println(f"Avg Price per Room per Day: SGD $avgPrice%.2f")
+    println(f"Avg Discount: $avgDiscount%.2f%%")
+    println(f"Avg Profit Margin: $avgProfit%.2f%%")
   }
 
   def question3(): Unit = {
