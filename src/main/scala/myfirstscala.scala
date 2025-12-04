@@ -179,7 +179,7 @@ def main(): Unit = {
     val country = hotelData.head.destinationCountry
     val avgPrice = pricePerRoomPerDayMap(bestHotel)
     val avgDiscount = discountMap(bestHotel)
-    val avgProfit = profitMarginMap(bestHotel)
+    val avgProfit = profitMarginMap(bestHotel) * 100
 
     println(s"Best all-around economical hotel:")
     println(s" → $bestHotel in $country")
