@@ -108,24 +108,20 @@ object Scoring {
 @main
 def main(): Unit = {
 
-  // read data
-
-  // enter file name to allow for usage of the same function for
-  // dataset with different names
+  // Read dataset into memory
+  // The same function can read any dataset with the same structure
   val data = HotelDataReader().readData("Hotel_Dataset.csv")
 
-  // questions
-
+  // Question 1 Find country with highest number of bookings
   object question1 {
-
     def run(data: List[HotelData]): Unit = {
       // Group by destination country
       val grouped = data.groupBy(_.destinationCountry)
 
-      // Count bookings
+      // Count number of bookings per country
       val counts = grouped.mapValues(_.size)
 
-      // Choose max
+      // Select country with maximum bookings
       val (country, count) = counts.maxBy(_._2)
 
       println("Country with the highest number of bookings:")
