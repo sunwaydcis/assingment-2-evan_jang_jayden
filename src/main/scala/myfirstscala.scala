@@ -1,13 +1,14 @@
 /** Hotel Data Analysis Program
- *
- * This program analyzes hotel booking dataset provided by a company that assists
- * international travelers in securing accommodations across various destination countries
+ It performs three main analyses:
+ 1. Finds the country with the highest number of bookings
+ 2. Identifies the most economical hotel using a scoring method
+ 3. Identifies the most profitable hotel based on visitors + margins
  */
 
 import com.github.tototoshi.csv.*
 
-// class for reading and parsing data
-
+// Case class representing one full row of hotel booking data
+// Each field corresponds directly to a column in the CSV
 case class HotelData(
                       bookingId: String,
                       dateOfBooking: String,
@@ -34,19 +35,21 @@ case class HotelData(
                       gst: BigDecimal,
                       profitMargin: BigDecimal,
                     )
-
+// Class responsible for reading and parsing the dataset
 class HotelDataReader {
 
-  // function for reading csv
+  // Reads the CSV file and converts every row into a HotelData object
   def readData(file: String): List[HotelData] = {
     val path: String = getClass.getResource(file).toURI.getPath
     val reader = CSVReader.open(path)
+
+    // allWithHeaders() returns rows as Map[String, String]
     val data = reader.allWithHeaders().map(parseRow)
     reader.close()
     data
   }
 
-  // function to parse single row
+  // Converts a single CSV row into a HotelData instance
   private def parseRow(row: Map[String, String]): HotelData = {
     HotelData(
       row("Booking ID"),
