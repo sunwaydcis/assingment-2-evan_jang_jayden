@@ -37,10 +37,6 @@ case class HotelData(
 
 class HotelDataReader {
 
-  // class for data encapsulation
-
-
-
   // function for reading csv
   def readData(file: String): List[HotelData] = {
     val path: String = getClass.getResource(file).toURI.getPath
@@ -114,79 +110,84 @@ def main(): Unit = {
 
   // questions
 
-  def question1(): Unit = {
-    // which country has the highest number of bookings in the dataset?
+  object question1 {
 
-    // Step 1: Group all bookings by the destination country
-    // This creates a Map[String, List[HotelData]] where the key is the country
-    val grouped = data.groupBy(_.destinationCountry)
+    def run(data: List[HotelData]): Unit = {
+      // Group by destination country
+      val grouped = data.groupBy(_.destinationCountry)
 
-    // Step 2: Count the number of bookings per country
-    // `mapValues(_.size)` transforms each list of bookings into its length
-    val counts = grouped.mapValues(_.size)
+      // Count bookings
+      val counts = grouped.mapValues(_.size)
 
-    // Step 3: Find the country with the maximum number of bookings
-    // `maxBy(_._2)` compares the counts (second element of the tuple) and returns the highest
-    val (topCountry, topCount) = counts.maxBy(_._2)
+      // Choose max
+      val (country, count) = counts.maxBy(_._2)
 
-    // Step 4: Print the result
-    println(s"Country with the highest number of bookings:")
-    println(s" → $topCountry ")
-    println(s"Bookings: $topCount ")
-
+      println("Country with the highest number of bookings:")
+      println(s"→ $country")
+      println(s"Bookings: $count")
+    }
   }
 
-  def question2(): Unit = {
-    val grouped = data.groupBy(b => (b.destinationCountry, b.hotelName, b.destinationCity))
+  object question2 {
 
+    // Internal case class to store processed hotel metrics
     case class ProcessedHotel(
                                country: String,
                                name: String,
                                city: String,
                                avgPrice: Double,
                                avgDiscount: Double,
-                               avgProfitMargin: Double,
-                               numTransactions: Int
+                               avgProfitMargin: Double
                              )
 
-    val processed = grouped.map { case ((country, name, city), bookings) =>
-      ProcessedHotel(
-        country,
-        name,
-        city,
-        bookings.map(_.bookingPriceSGD.toDouble).sum / bookings.size,
-        bookings.map(_.discount.toDouble).sum / bookings.size,
-        bookings.map(_.profitMargin.toDouble).sum / bookings.size,
-        bookings.size
-      )
-    }.toList
+    def run(data: List[HotelData]): Unit = {
 
-    // min–max for 3 metrics
-    val prices = processed.map(_.avgPrice)
-    val discounts = processed.map(_.avgDiscount)
-    val profits = processed.map(_.avgProfitMargin)
+      // Group by unique hotel (country + name + city)
+      val grouped = data.groupBy(b => (b.destinationCountry, b.hotelName, b.destinationCity))
 
-    val mins = List(prices.min, discounts.min, profits.min)
-    val maxs = List(prices.max, discounts.max, profits.max)
+      // Compute averages for each hotel
+      val processed = grouped.map { case ((country, name, city), bookings) =>
+        ProcessedHotel(
+          country,
+          name,
+          city,
+          bookings.map(_.bookingPriceSGD.toDouble).sum / bookings.size,
+          bookings.map(_.discount.toDouble).sum / bookings.size,
+          bookings.map(_.profitMargin.toDouble).sum / bookings.size
+        )
+      }.toList
 
-    // higherIsBetter flags
-    val flags = List(false, true, false) // price ↓ , discount ↑ , profit ↓
+      // Get min and max for normalization
+      val prices = processed.map(_.avgPrice)
+      val discounts = processed.map(_.avgDiscount)
+      val profits = processed.map(_.avgProfitMargin)
 
-    val scored = processed.map { h =>
-      val values = List(h.avgPrice, h.avgDiscount, h.avgProfitMargin)
-      val score = Scoring.computeScore(values, mins, maxs, flags)
-      (h, score)
+      val mins = List(prices.min, discounts.min, profits.min)
+      val maxs = List(prices.max, discounts.max, profits.max)
+
+      // Flags: true if higher is better
+      val flags = List(false, true, false)
+
+      // Compute scores
+      val scored = processed.map { h =>
+        val values = List(h.avgPrice, h.avgDiscount, h.avgProfitMargin)
+        (h, Scoring.computeScore(values, mins, maxs, flags))
+      }
+
+      // Find best hotel
+      val (bestHotel, bestScore) = scored.maxBy(_._2)
+
+      // Print output
+      println("Most Economical Hotel:")
+      println(f" → ${bestHotel.country} - ${bestHotel.name} - ${bestHotel.city}")
+      println(f"Average Price: ${bestHotel.avgPrice}%.2f SGD")
+      println(f"Average Discount: ${bestHotel.avgDiscount}%.2f%%")
+      println(f"Average Profit Margin: ${bestHotel.avgProfitMargin * 100}%.2f%%")
+      println(f"Final Score: $bestScore%.2f")
     }
-
-    val (bestHotel, bestScore) = scored.maxBy(_._2)
-
-    println("Most Economical Hotel:")
-    println(f" → ${bestHotel.country} - ${bestHotel.name} - ${bestHotel.city}")
-    println(f"Final Score: $bestScore%.2f")
   }
 
-  def question3(): Unit = {
-    val grouped = data.groupBy(b => (b.destinationCountry, b.hotelName, b.destinationCity))
+  object question3 {
 
     case class ProcessedHotel(
                                country: String,
@@ -196,38 +197,43 @@ def main(): Unit = {
                                avgProfitMargin: Double
                              )
 
-    val processed = grouped.map { case ((country, name, city), bookings) =>
-      ProcessedHotel(
-        country,
-        name,
-        city,
-        bookings.map(_.numberOfPeople).sum,
-        bookings.map(_.profitMargin.toDouble).sum / bookings.size
-      )
-    }.toList
+    def run(data: List[HotelData]): Unit = {
 
-    // min–max for visitors & margins
-    val visitors = processed.map(_.totalVisitors.toDouble)
-    val margins = processed.map(_.avgProfitMargin)
+      // Group by hotel
+      val grouped = data.groupBy(b => (b.destinationCountry, b.hotelName, b.destinationCity))
 
-    val mins = List(visitors.min, margins.min)
-    val maxs = List(visitors.max, margins.max)
+      // Sum visitors, average profit margin
+      val processed = grouped.map { case ((country, name, city), bookings) =>
+        ProcessedHotel(
+          country,
+          name,
+          city,
+          bookings.map(_.numberOfPeople).sum,
+          bookings.map(_.profitMargin.toDouble).sum / bookings.size
+        )
+      }.toList
 
-    val flags = List(true, true) // visitors ↑, margin ↑
+      val visitors = processed.map(_.totalVisitors.toDouble)
+      val margins = processed.map(_.avgProfitMargin)
 
-    val scored = processed.map { h =>
-      val values = List(h.totalVisitors.toDouble, h.avgProfitMargin)
-      val score = Scoring.computeScore(values, mins, maxs, flags)
-      (h, score)
+      val mins = List(visitors.min, margins.min)
+      val maxs = List(visitors.max, margins.max)
+
+      val flags = List(true, true)
+
+      val scored = processed.map { h =>
+        val values = List(h.totalVisitors.toDouble, h.avgProfitMargin)
+        (h, Scoring.computeScore(values, mins, maxs, flags))
+      }
+
+      val (bestHotel, bestScore) = scored.maxBy(_._2)
+
+      println("Most Profitable Hotel:")
+      println(f" → ${bestHotel.country} - ${bestHotel.name} - ${bestHotel.city}")
+      println(f"Total Visitors: ${bestHotel.totalVisitors}")
+      println(f"Average Profit Margin: ${bestHotel.avgProfitMargin * 100}%.2f%%")
+      println(f"Final Score: $bestScore%.2f")
     }
-
-    val (bestHotel, bestScore) = scored.maxBy(_._2)
-
-    println("Most Profitable Hotel:")
-    println(f" → ${bestHotel.country} - ${bestHotel.name} - ${bestHotel.city}")
-    println(f"Total Visitors: ${bestHotel.totalVisitors}")
-    println(f"Avg Margin: ${bestHotel.avgProfitMargin}%.2f")
-    println(f"Final Score: $bestScore%.2f")
   }
 
   // output
@@ -235,15 +241,15 @@ def main(): Unit = {
   println("\n==================== Hotel Booking Analysis ====================\n")
 
   println(">>> Question 1: Country with the highest number of bookings <<<\n")
-  question1()
+  question1.run(data)
   println("\n---------------------------------------------------------------\n")
 
   println(">>> Question 2: Most economical hotels <<<\n")
-  question2()
+  question2.run(data)
   println("\n---------------------------------------------------------------\n")
 
   println(">>> Question 3: Most profitable hotel <<<\n")
-  question3()
+  question3.run(data)
   println("\n==================== End of Analysis =========================\n")
 
 }
