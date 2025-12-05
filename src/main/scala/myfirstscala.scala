@@ -81,7 +81,9 @@ class HotelDataReader {
 
 }
 
-// main program
+// Normalization utilities
+// lowerIsBetter → lower value should get higher score
+// higherIsBetter → higher value should get higher score
 object Normalizer {
   def lowerIsBetter(value: Double, min: Double, max: Double): Double =
     if (max == min) 100 else (1 - (value - min) / (max - min)) * 100
