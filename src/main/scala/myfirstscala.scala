@@ -244,7 +244,7 @@ def main(): Unit = {
   question1.run(data)
   println("\n---------------------------------------------------------------\n")
 
-  println(">>> Question 2: Most economical hotels <<<\n")
+  println(">>> Question 2: Most economical hotel <<<\n")
   question2.run(data)
   println("\n---------------------------------------------------------------\n")
 
