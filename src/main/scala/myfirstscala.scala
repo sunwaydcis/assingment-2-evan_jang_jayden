@@ -92,6 +92,7 @@ object Normalizer {
     if (max == min) 100 else ((value - min) / (max - min)) * 100
 }
 
+// Scoring logic used in question 2 and question 3
 object Scoring {
   def computeScore(values: List[Double], mins: List[Double], maxs: List[Double], higherIsBetter: List[Boolean]): Double = {
     val scores = values.indices.map { i =>
