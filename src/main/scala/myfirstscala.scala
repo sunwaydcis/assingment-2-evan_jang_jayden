@@ -130,9 +130,11 @@ def main(): Unit = {
     }
   }
 
+  // Question 2 Most economical hotel
+  // Criteria: low price, high discount, low profit margin
   object question2 {
 
-    // Internal case class to store processed hotel metrics
+    // Helper class storing pre-computed averages for each hotel
     case class ProcessedHotel(
                                country: String,
                                name: String,
@@ -159,24 +161,25 @@ def main(): Unit = {
         )
       }.toList
 
-      // Get min and max for normalization
+      // Extract lists for normalization
       val prices = processed.map(_.avgPrice)
       val discounts = processed.map(_.avgDiscount)
       val profits = processed.map(_.avgProfitMargin)
 
+      // Build min + max lists
       val mins = List(prices.min, discounts.min, profits.min)
       val maxs = List(prices.max, discounts.max, profits.max)
 
-      // Flags: true if higher is better
+      // Flags: false = lower is better, true = higher is better
       val flags = List(false, true, false)
 
-      // Compute scores
+      // Score every hotel based on normalized metrics
       val scored = processed.map { h =>
         val values = List(h.avgPrice, h.avgDiscount, h.avgProfitMargin)
         (h, Scoring.computeScore(values, mins, maxs, flags))
       }
 
-      // Find best hotel
+      // Select hotel with highest score
       val (bestHotel, bestScore) = scored.maxBy(_._2)
 
       // Print output
