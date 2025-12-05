@@ -192,6 +192,8 @@ def main(): Unit = {
     }
   }
 
+  // Question 3 — Most profitable hotel
+  // Criteria: high total visitors + high average profit margin
   object question3 {
 
     case class ProcessedHotel(
@@ -207,7 +209,7 @@ def main(): Unit = {
       // Group by hotel
       val grouped = data.groupBy(b => (b.destinationCountry, b.hotelName, b.destinationCity))
 
-      // Sum visitors, average profit margin
+      // Compute visitors + average margin
       val processed = grouped.map { case ((country, name, city), bookings) =>
         ProcessedHotel(
           country,
@@ -218,19 +220,23 @@ def main(): Unit = {
         )
       }.toList
 
+      // Extract lists for scoring
       val visitors = processed.map(_.totalVisitors.toDouble)
       val margins = processed.map(_.avgProfitMargin)
 
       val mins = List(visitors.min, margins.min)
       val maxs = List(visitors.max, margins.max)
 
+      // Both attributes use higher is better
       val flags = List(true, true)
 
+      // Compute scores
       val scored = processed.map { h =>
         val values = List(h.totalVisitors.toDouble, h.avgProfitMargin)
         (h, Scoring.computeScore(values, mins, maxs, flags))
       }
 
+      // Select highest scoring hotel
       val (bestHotel, bestScore) = scored.maxBy(_._2)
 
       println("Most Profitable Hotel:")
@@ -241,7 +247,7 @@ def main(): Unit = {
     }
   }
 
-  // output
+  // Program output
 
   println("\n==================== Hotel Booking Analysis ====================\n")
 
