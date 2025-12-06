@@ -192,7 +192,7 @@ def main(): Unit = {
     }
   }
 
-  // Question 3 — Most profitable hotel
+  // Question 3 Most profitable hotel
   // Criteria: high total visitors + high average profit margin
   object question3 {
 
